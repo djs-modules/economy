@@ -9,10 +9,6 @@ import { BankManager } from "./BankManager";
 import { ShopManager } from "./ShopManager";
 import { DBManager } from "./DBManager";
 
-// Other
-import { request } from "undici";
-import colors from "colors";
-
 export interface Economy {
   options: Options;
   database: DBManager;
@@ -59,7 +55,7 @@ export class Economy {
      *
      * @type {string}
      */
-    this.version = "1.2.2";
+    this.version = "1.2.3";
 
     /**
      * Balance Manager
@@ -176,39 +172,6 @@ export class Economy {
       }
 
       return res(true);
-    });
-  }
-
-  /**
-   * Method that checks module for an actual update.
-   *
-   * @private
-   * @returns {Promise<boolean|string>}
-   */
-  private checkForUpdates(): Promise<boolean | string> {
-    return new Promise(async (res, rej) => {
-      const { "dist-tags": versions } = await (
-        await request(
-          "https://registry.npmjs.com/@badboy-discord/discordjs-economy"
-        )
-      ).body.json();
-
-      if (this.version === versions.latest) return res(true);
-      else {
-        const latest = versions.latest;
-        const name = "@badboy-discord/discordjs-economy";
-        const update_cmd = `npm install ${name}@latest`;
-
-        const text = [
-          "",
-          `New version of "${colors.yellow(name)}" avaliable (v${latest})!`,
-          "It is recommended to install because new version can contain fixes!",
-          `To upgrade, please write "${colors.yellow(update_cmd)}"`,
-          "",
-        ].join("\n");
-
-        return res(text);
-      }
     });
   }
 }
